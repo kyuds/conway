@@ -2,17 +2,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define DEAD 0
-#define ALIVE 1
-#define REVIVE -1
-#define DIE 2
 #define MAX_DIM 1024
 
 board_t * create_board(const int width, const int height) {
     board_t * board = (board_t *) malloc(sizeof(board_t));
     board->width = width;
     board->height = height;
-    board->board = (int*) calloc(sizeof(int) * width * height, 0);
+    board->board = (int*) calloc(sizeof(int) * width * height, sizeof(int));
     return board;
 }
 
@@ -38,10 +34,31 @@ board_t * board_from_file(const char* filename) {
             exit(1);
         }
         for (int j = 0; j < width; j++) {
-            set_board(board, i, j, line[j] == 'X' ? ALIVE : DEAD);
+            set_board(board, j, i, line[j] == 'X' ? ALIVE : DEAD);
         }
     }
     return board;
+}
+
+// sprintf(fname, "debug/b%d.txt", step++);
+void save_board_to_file(board_t * board, const char* filename) {
+    FILE *file = fopen(filename, "w+");
+    if (!file) {
+        exit(1);
+    }
+
+    // Write the width and height
+    fprintf(file, "%d %d\n", board->width, board->height);
+
+    // Write the board contents row by row
+    for (int i = 0; i < board->height; i++) {
+        for (int j = 0; j < board->width; j++) {
+            fprintf(file, "%s ", get_board(board, j, i) == ALIVE ? "X " : "  ");
+        }
+        fprintf(file, "\n");
+    }
+
+    fclose(file);
 }
 
 void step_board(board_t* board) {
@@ -75,11 +92,11 @@ void step_board(board_t* board) {
 }
 
 int get_board(board_t* board, const int x, const int y) {
-    return *(board->board + y * board->height + x);
+    return *(board->board + y * board->width + x);
 }
 
 void set_board(board_t* board, const int x, const int y, const int value) {
-    *(board->board + y * board->height + x) = value;
+    *(board->board + y * board->width + x) = value;
 }
 
 void free_board(board_t* board) {
@@ -88,10 +105,17 @@ void free_board(board_t* board) {
 }
 
 void debug_print(board_t* board) {
-    for (int x = 0; x < board->width; x++) {
-        for (int y = 0; y < board->height; y++) {
-            printf(get_board(board, x, y) == ALIVE ? "X" : ".");
+    // initialize row
+    char row[board->width * 2];
+    for (int x = 0; x < board->width * 2 - 1; x++)
+        row[x] = ' ';
+    row[board->width * 2 - 1] = '\0';
+
+    for (int y = 0; y < board->height; y++) {
+        for (int x = 0; x < board->width; x++) {
+            row[x * 2] = get_board(board, x, y) == ALIVE ? 'X' : ' ';
         }
+        printf("%s", row);
         printf("\n");
     }
 }

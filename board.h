@@ -1,6 +1,11 @@
 #ifndef CONWAY_BOARD
 #define CONWAY_BOARD
 
+#define DEAD 0
+#define ALIVE 1
+#define REVIVE -1
+#define DIE 2
+
 typedef struct {
     int* board;
     int width;
@@ -9,6 +14,7 @@ typedef struct {
 
 board_t * create_board(const int width, const int height);
 board_t * board_from_file(const char* filename);
+void save_board_to_file(board_t * board, const char* filename);
 void step_board(board_t* board);
 int get_board(board_t* board, const int x, const int y);
 void set_board(board_t* board, const int x, const int y, const int value);

@@ -1,10 +1,10 @@
 .PHONY: all build clean
 
-all: clean build
-
 build:
 	mkdir -p build
 	cd build && cmake .. && cmake --build .
+
+all: clean build
 
 clean:
 	rm -rf build

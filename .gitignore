@@ -39,3 +39,7 @@ build/
 
 # macOS
 .DS_Store
+
+# testing
+debug/
+tui/
