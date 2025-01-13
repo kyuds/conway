@@ -4,10 +4,6 @@ conway's game of life with ncurses
 ### Running
 ```
 make
-build/conway boards/pulsar.txt
+build/conway boards/gosper.txt # or another filename
 ```
-Sample board txt files are located in the `boards/` folder.
-
-### Demo
-![Demo](https://github.com/kyuds/conway/blob/main/assets/demo.gif?raw=true)
-
+** Sample board txt files are located in the `boards/` folder.
